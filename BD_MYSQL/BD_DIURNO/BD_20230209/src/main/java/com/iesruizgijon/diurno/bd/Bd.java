@@ -1,14 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.iesruizgijon.diurno.bd;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,15 +119,67 @@ public class Bd implements InterfaceBd {
 
     @Override
     public String[] getDescribe(String nombreBaseDatos, String nombreTabla) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        String[] listColumns = null;
+        Conecta(nombreBaseDatos);
+        int tam = 0;
+        
+        try {
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery("select * from " + nombreTabla );
+            ResultSetMetaData md = (ResultSetMetaData) rs.getMetaData();
+            
+            tam =md.getColumnCount();
+            
+            listColumns = new String[tam];
+            
+            for (int i = 0; i < tam; i++ )
+                listColumns[i] = md.getColumnName(i+1);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Bd.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Desconecta();
+       
+        return listColumns;
     }
 
     @Override
     public String[] getSelect(String nombreBaseDatos, String nombreTabla) {
-  
         
+        String[] contenido = null;
+        String fila;
+        int counter = 0;
+        int i = 0;
+
+        Conecta(nombreBaseDatos);
         
-        
+        try {
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + nombreTabla);
+            
+            while(rs.next())
+                counter++;
+            
+            rs = st.executeQuery("SELECT * FROM " + nombreTabla);
+            
+            while(rs.next()){
+                fila = rs.getString(1);
+                fila += rs.getString(2);
+                fila += rs.getString(3);
+                fila += rs.getString(4);
+                
+                contenido[i] = fila;
+                i++;
+            }
+            
+            Desconecta();
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bd.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return contenido;
     }
 
 }

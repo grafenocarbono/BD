@@ -36,5 +36,23 @@ public class Principal {
             System.out.println(nombre);
         }
         
+        
+        arrayCadenas = bd.getDescribe("classicmodels", "employees");
+        
+        System.out.println("**** COLUMNAS ***");
+        
+        for(String nombre: arrayCadenas){
+            System.out.println(nombre);
+        }
+        
+        arrayCadenas = bd.getDescribe("classicmodels", "employees");
+        
+        System.out.println("**** CONTENIDO ***");
+        
+        for(String nombre: arrayCadenas){
+            System.out.println(nombre);
+        }
+        
+        
     }
 }
